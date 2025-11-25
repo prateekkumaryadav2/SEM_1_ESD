@@ -1,10 +1,10 @@
 com/example/academic/config/AuthFilter.class
-com/example/academic/model/Course.class
 com/example/academic/repository/UserRepository.class
 com/example/academic/config/SecurityConfig.class
 com/example/academic/model/User.class
 com/example/academic/AcademicApplication.class
 com/example/academic/config/DataInitializer.class
+com/example/academic/model/Course.class
 com/example/academic/controller/AuthController.class
 com/example/academic/repository/CourseRepository.class
 com/example/academic/controller/CourseController.class
