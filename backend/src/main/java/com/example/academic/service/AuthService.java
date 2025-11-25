@@ -38,7 +38,7 @@ public class AuthService {
     /**
      * Authenticate user with username and password
      * @param loginRequest Login credentials
-     * @return AuthResponseDTO if successful, empty otherwise
+     * @return AuthResponseDTO if successful, empty with error message otherwise
      */
     public Optional<AuthResponseDTO> login(LoginRequestDTO loginRequest) {
         String username = loginRequest.getUsername();
@@ -46,16 +46,19 @@ public class AuthService {
 
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()) {
-            User user = userOpt.get();
-            if (user.getPassword() != null && user.getPassword().equals(password)) {
-                String token = generateToken();
-                AuthFilter.TOKENS.put(token, username);
-                AuthResponseDTO response = AuthMapper.toAuthResponse(user, token);
-                return Optional.of(response);
-            }
+        if (userOpt.isEmpty()) {
+            throw new IllegalArgumentException("User not found");
         }
-        return Optional.empty();
+        
+        User user = userOpt.get();
+        if (user.getPassword() == null || !user.getPassword().equals(password)) {
+            throw new IllegalArgumentException("Wrong password");
+        }
+        
+        String token = generateToken();
+        AuthFilter.TOKENS.put(token, username);
+        AuthResponseDTO response = AuthMapper.toAuthResponse(user, token);
+        return Optional.of(response);
     }
 
     /**

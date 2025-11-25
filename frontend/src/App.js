@@ -1,29 +1,21 @@
-import React, {useState, useEffect} from 'react';
-import Login from './pages/Login';
-import Courses from './pages/Courses';
+import React from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
+import LoginContainer from './components/containers/LoginContainer';
+import CoursesContainer from './components/containers/CoursesContainer';
 
-export default function App(){
-  const [token, setToken] = useState(localStorage.getItem('authToken'));
-  const [darkMode, setDarkMode] = useState(localStorage.getItem('darkMode') === 'true');
+function AppContent() {
+  const { isAuthenticated } = useAuth();
   
-  const onLogin = (t) => { localStorage.setItem('authToken', t); setToken(t); };
-  const onLogout = () => { localStorage.removeItem('authToken'); setToken(null); };
-  
-  const toggleDarkMode = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem('darkMode', newMode);
-  };
+  return isAuthenticated() ? <CoursesContainer /> : <LoginContainer />;
+}
 
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-    } else {
-      document.body.classList.remove('dark-mode');
-    }
-  }, [darkMode]);
-
-  return token ? 
-    <Courses token={token} onLogout={onLogout} darkMode={darkMode} toggleDarkMode={toggleDarkMode} /> : 
-    <Login onLogin={onLogin} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />;
+export default function App() {
+  return (
+    <AuthProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </AuthProvider>
+  );
 }

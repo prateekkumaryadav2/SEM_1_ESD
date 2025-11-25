@@ -30,12 +30,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDTO loginRequest) {
-        Optional<AuthResponseDTO> response = authService.login(loginRequest);
-        
-        if (response.isPresent()) {
-            return ResponseEntity.ok(response.get());
+        try {
+            Optional<AuthResponseDTO> response = authService.login(loginRequest);
+            if (response.isPresent()) {
+                return ResponseEntity.ok(response.get());
+            }
+            return ResponseEntity.status(401).body(new ErrorResponseDTO("Invalid credentials"));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(401).body(new ErrorResponseDTO(e.getMessage()));
         }
-        return ResponseEntity.status(401).body(new ErrorResponseDTO("Invalid credentials"));
     }
 
     @PostMapping("/google")
