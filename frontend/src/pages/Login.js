@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import API from '../api';
 
-export default function Login({onLogin}){
+export default function Login({onLogin, darkMode, toggleDarkMode}){
   const [u,setU] = useState('');
   const [p,setP] = useState('');
   const [err,setErr] = useState(null);
@@ -81,6 +81,16 @@ export default function Login({onLogin}){
       <div className="container" style={{position: 'relative', zIndex: 2}}>
         <div className="row justify-content-center">
           <div className="col-md-6 col-lg-5">
+            <div className="position-relative mb-3 d-flex justify-content-end">
+              <button 
+                className="btn btn-outline-light theme-toggle" 
+                onClick={toggleDarkMode}
+                title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                style={{border: '1px solid rgba(255, 255, 255, 0.5)'}}
+              >
+                <i className={`bi bi-${darkMode ? 'sun-fill' : 'moon-fill'}`}></i>
+              </button>
+            </div>
             <div className="card shadow-lg border-0 rounded-lg">
               <div className="card-header bg-primary text-white text-center py-4">
                 <h3 className="mb-0">

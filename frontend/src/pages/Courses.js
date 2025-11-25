@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import API from '../api';
 
-export default function Courses({token, onLogout}){
+export default function Courses({token, onLogout, darkMode, toggleDarkMode}){
   const [courses, setCourses] = useState([]);
   const [form, setForm] = useState({code:'', title:'', credits:3, description:''});
   const [showForm, setShowForm] = useState(false);
@@ -45,9 +45,18 @@ export default function Courses({token, onLogout}){
             <i className="bi bi-mortarboard-fill me-2"></i>
             Academic Portal
           </a>
-          <button className="btn btn-outline-light" onClick={()=>{ API.logout(token); onLogout(); }}>
-            <i className="bi bi-box-arrow-right me-2"></i>Logout
-          </button>
+          <div className="d-flex align-items-center gap-2">
+            <button 
+              className="btn btn-outline-light theme-toggle" 
+              onClick={toggleDarkMode}
+              title={darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              <i className={`bi bi-${darkMode ? 'sun-fill' : 'moon-fill'}`}></i>
+            </button>
+            <button className="btn btn-outline-light" onClick={()=>{ API.logout(token); onLogout(); }}>
+              <i className="bi bi-box-arrow-right me-2"></i>Logout
+            </button>
+          </div>
         </div>
       </nav>
 
