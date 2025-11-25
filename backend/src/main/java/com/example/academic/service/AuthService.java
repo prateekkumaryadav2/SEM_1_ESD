@@ -36,15 +36,15 @@ public class AuthService {
     }
 
     /**
-     * Authenticate user with username and password
+     * Authenticate user with email and password
      * @param loginRequest Login credentials
      * @return AuthResponseDTO if successful, empty with error message otherwise
      */
     public Optional<AuthResponseDTO> login(LoginRequestDTO loginRequest) {
-        String username = loginRequest.getUsername();
+        String email = loginRequest.getUsername(); // username field contains email
         String password = loginRequest.getPassword();
 
-        Optional<User> userOpt = userRepository.findByUsername(username);
+        Optional<User> userOpt = userRepository.findByEmail(email);
 
         if (userOpt.isEmpty()) {
             throw new IllegalArgumentException("User not found");
@@ -56,7 +56,7 @@ public class AuthService {
         }
         
         String token = generateToken();
-        AuthFilter.TOKENS.put(token, username);
+        AuthFilter.TOKENS.put(token, email);
         AuthResponseDTO response = AuthMapper.toAuthResponse(user, token);
         return Optional.of(response);
     }
@@ -80,7 +80,7 @@ public class AuthService {
         String name = (String) payload.get("name");
 
         // Check if user exists
-        Optional<User> existingUser = userRepository.findByUsername(email);
+        Optional<User> existingUser = userRepository.findByEmail(email);
         User user;
 
         if (existingUser.isEmpty()) {
@@ -140,11 +140,11 @@ public class AuthService {
     }
 
     /**
-     * Find user by username
-     * @param username Username
+     * Find user by email
+     * @param email User email
      * @return Optional User
      */
     public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByEmail(username); // username parameter contains email
     }
 }

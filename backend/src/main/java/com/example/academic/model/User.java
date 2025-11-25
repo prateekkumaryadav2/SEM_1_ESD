@@ -14,33 +14,50 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true)
-    private String username;
-
-    private String password;
-
+    @Column(unique = true, nullable = false)
     private String email;
 
-    private String googleId;
+    @Column(name = "full_name")
+    private String fullName;
 
-    @Column(name = "auth_provider")
-    private String authProvider; // "local" or "google"
+    private String role; // e.g., "admin", "employee", "student"
+
+    private String provider; // e.g., "local", "google"
+
+    @Column(name = "provider_id")
+    private String providerId;
+
+    // For backward compatibility
+    private String password; // Only for local auth
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public String getGoogleId() { return googleId; }
-    public void setGoogleId(String googleId) { this.googleId = googleId; }
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
-    public String getAuthProvider() { return authProvider; }
-    public void setAuthProvider(String authProvider) { this.authProvider = authProvider; }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
+
+    public String getProvider() { return provider; }
+    public void setProvider(String provider) { this.provider = provider; }
+
+    public String getProviderId() { return providerId; }
+    public void setProviderId(String providerId) { this.providerId = providerId; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+    
+    // Legacy getters/setters for backward compatibility
+    public String getUsername() { return email; }
+    public void setUsername(String username) { this.email = username; }
+    
+    public String getGoogleId() { return providerId; }
+    public void setGoogleId(String googleId) { this.providerId = googleId; }
+    
+    public String getAuthProvider() { return provider; }
+    public void setAuthProvider(String authProvider) { this.provider = authProvider; }
 }
