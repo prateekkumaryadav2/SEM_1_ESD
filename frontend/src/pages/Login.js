@@ -6,6 +6,7 @@ export default function Login({onLogin, darkMode, toggleDarkMode}){
   const [p,setP] = useState('');
   const [err,setErr] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     // Load Google Sign-In script
@@ -130,15 +131,32 @@ export default function Login({onLogin, darkMode, toggleDarkMode}){
                     <label htmlFor="password" className="form-label">
                       <i className="bi bi-lock-fill me-2"></i>Password
                     </label>
-                    <input 
-                      type="password" 
-                      className="form-control form-control-lg" 
-                      id="password"
-                      placeholder="Enter your password"
-                      value={p} 
-                      onChange={e=>setP(e.target.value)}
-                      required
-                    />
+                    <div className="position-relative">
+                      <input 
+                        type={showPassword ? "text" : "password"}
+                        className="form-control form-control-lg" 
+                        id="password"
+                        placeholder="Enter your password"
+                        value={p} 
+                        onChange={e=>setP(e.target.value)}
+                        required
+                        style={{paddingRight: '3rem'}}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-link position-absolute top-50 end-0 translate-middle-y"
+                        onClick={() => setShowPassword(!showPassword)}
+                        style={{
+                          border: 'none',
+                          background: 'transparent',
+                          padding: '0.5rem 1rem',
+                          color: '#6c757d'
+                        }}
+                        title={showPassword ? 'Hide password' : 'Show password'}
+                      >
+                        <i className={`bi bi-eye${showPassword ? '-slash' : ''}-fill`}></i>
+                      </button>
+                    </div>
                   </div>
 
                   <div className="d-grid">
