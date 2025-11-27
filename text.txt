@@ -1,2 +1,2 @@
 back end: cd /Users/prateek/Desktop/esd/backend && java -jar target/academic-0.0.1-SNAPSHOT.jar
-front end: cd /Users/prateek/Desktop/esd/frontend && npm start
+front end: cd /Users/prateek/Desktop/esd/frontend && npm start 

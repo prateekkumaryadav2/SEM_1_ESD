@@ -201,7 +201,7 @@ FROM specialisation_course sc
 JOIN specialisation s ON sc.specialisation_id = s.specialisation_id
 JOIN courses c ON sc.course_id = c.course_id
 LIMIT 10;
-
+ 
 -- =====================================================
 -- Useful Queries for Testing
 -- =====================================================
