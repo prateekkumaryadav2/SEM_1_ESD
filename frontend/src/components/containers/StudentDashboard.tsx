@@ -9,6 +9,7 @@ const StudentDashboard: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSpecialisation, setSelectedSpecialisation] = useState<string>('');
 
   useEffect(() => {
     loadCourses();
@@ -33,10 +34,22 @@ const StudentDashboard: React.FC = () => {
     logout();
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Get all unique specialisations from courses
+  const allSpecialisations = Array.from(
+    new Set(
+      courses.flatMap(course => course.specialisations || [])
+    )
+  ).sort();
+
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.code.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSpecialisation = !selectedSpecialisation || 
+      (course.specialisations && course.specialisations.includes(selectedSpecialisation));
+    
+    return matchesSearch && matchesSpecialisation;
+  });
 
   return (
     <div className={`min-vh-100 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
@@ -73,9 +86,9 @@ const StudentDashboard: React.FC = () => {
             Explore our comprehensive selection of courses
           </p>
           
-          {/* Search Bar */}
+          {/* Search Bar and Specialisation Filter */}
           <div className="row justify-content-center mt-4">
-            <div className="col-md-6">
+            <div className="col-md-5">
               <div className="input-group input-group-lg">
                 <span className={`input-group-text ${darkMode ? 'bg-secondary text-light border-secondary' : 'bg-light'}`}>
                   <i className="bi bi-search"></i>
@@ -83,11 +96,29 @@ const StudentDashboard: React.FC = () => {
                 <input
                   type="text"
                   className={`form-control ${darkMode ? 'bg-secondary text-light border-secondary' : ''}`}
-                  placeholder="Search courses by title, code, or description..."
+                  placeholder="Search courses by title"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   style={darkMode ? { color: '#fff' } : {}}
                 />
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="input-group input-group-lg">
+                <span className={`input-group-text ${darkMode ? 'bg-secondary text-light border-secondary' : 'bg-light'}`}>
+                  <i className="bi bi-filter"></i>
+                </span>
+                <select
+                  className={`form-select ${darkMode ? 'bg-secondary text-light border-secondary' : ''}`}
+                  value={selectedSpecialisation}
+                  onChange={(e) => setSelectedSpecialisation(e.target.value)}
+                  style={darkMode ? { color: '#fff' } : {}}
+                >
+                  <option value="">All Specialisations</option>
+                  {allSpecialisations.map((spec: string) => (
+                    <option key={spec} value={spec}>{spec}</option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
@@ -117,7 +148,7 @@ const StudentDashboard: React.FC = () => {
             <div className={`card ${darkMode ? 'bg-info text-white' : 'bg-info text-white'} shadow-sm border-0`}>
               <div className="card-body text-center">
                 <i className="bi bi-award-fill display-4 mb-2"></i>
-                <h3 className="fw-bold">{courses.reduce((sum, c) => sum + (c.credits || 0), 0)}</h3>
+                <h3 className="fw-bold">{filteredCourses.reduce((sum, c) => sum + (c.credits || 0), 0)}</h3>
                 <p className="mb-0">Total Credits</p>
               </div>
             </div>

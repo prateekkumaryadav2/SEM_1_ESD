@@ -35,6 +35,7 @@ const CoursesContainer: React.FC = () => {
   const [success, setSuccess] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [selectedSpecialisation, setSelectedSpecialisation] = useState<string>('');
 
   const loadCourses = async (): Promise<void> => {
     if (!token) return;
@@ -147,10 +148,22 @@ const CoursesContainer: React.FC = () => {
     logout();
   };
 
-  const filteredCourses = courses.filter(course =>
-    course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    course.code.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Get all unique specialisations from courses
+  const allSpecialisations = Array.from(
+    new Set(
+      courses.flatMap(course => course.specialisations || [])
+    )
+  ).sort();
+
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      course.code.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesSpecialisation = !selectedSpecialisation || 
+      (course.specialisations && course.specialisations.includes(selectedSpecialisation));
+    
+    return matchesSearch && matchesSpecialisation;
+  });
 
   return (
     <div className={`min-vh-100 ${darkMode ? 'bg-dark' : 'bg-light'}`}>
@@ -197,9 +210,9 @@ const CoursesContainer: React.FC = () => {
           </button>
         </div>
 
-        {/* Search Bar */}
-        <div className="row mb-4">
-          <div className="col-md-6">
+        {/* Search Bar and Specialisation Filter */}
+        <div className="row justify-content-center mb-4">
+          <div className="col-md-5">
             <div className="input-group">
               <span className={`input-group-text ${darkMode ? 'bg-secondary text-light border-secondary' : 'bg-light'}`}>
                 <i className="bi bi-search"></i>
@@ -207,11 +220,29 @@ const CoursesContainer: React.FC = () => {
               <input
                 type="text"
                 className={`form-control ${darkMode ? 'bg-secondary text-light border-secondary' : ''}`}
-                placeholder="Search courses by title, code, or description..."
+                placeholder="Search courses by title"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 style={darkMode ? { color: '#fff' } : {}}
               />
+            </div>
+          </div>
+          <div className="col-md-4">
+            <div className="input-group">
+              <span className={`input-group-text ${darkMode ? 'bg-secondary text-light border-secondary' : 'bg-light'}`}>
+                <i className="bi bi-filter"></i>
+              </span>
+              <select
+                className={`form-select ${darkMode ? 'bg-secondary text-light border-secondary' : ''}`}
+                value={selectedSpecialisation}
+                onChange={(e) => setSelectedSpecialisation(e.target.value)}
+                style={darkMode ? { color: '#fff' } : {}}
+              >
+                <option value="">All Specialisations</option>
+                {allSpecialisations.map((spec: string) => (
+                  <option key={spec} value={spec}>{spec}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>

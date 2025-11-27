@@ -46,13 +46,13 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete, onEdit }) 
           <table className={`table table-hover table-striped mb-0 ${darkMode ? 'table-dark' : ''}`}>
             <thead className="table-dark">
               <tr>
-                <th><i className="bi bi-hash me-1"></i>ID</th>
-                <th><i className="bi bi-tag me-1"></i>Code</th>
-                <th><i className="bi bi-book me-1"></i>Title</th>
-                <th><i className="bi bi-mortarboard me-1"></i>Specialisations</th>
-                <th><i className="bi bi-star me-1"></i>Credits</th>
-                <th><i className="bi bi-file-text me-1"></i>Description</th>
-                <th className="text-center"><i className="bi bi-gear me-1"></i>Actions</th>
+                <th className="text-nowrap"><i className="bi bi-hash me-2"></i>ID</th>
+                <th className="text-nowrap"><i className="bi bi-tag me-2"></i>Code</th>
+                <th className="text-nowrap"><i className="bi bi-book me-2"></i>Title</th>
+                <th className="text-nowrap"><i className="bi bi-mortarboard me-2"></i>Specialisations</th>
+                <th className="text-nowrap"><i className="bi bi-star me-2"></i>Credits</th>
+                <th className="text-nowrap"><i className="bi bi-file-text me-2"></i>Description</th>
+                <th className="text-center text-nowrap"><i className="bi bi-gear me-2"></i>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -93,14 +93,16 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete, onEdit }) 
                     <button 
                       className="btn btn-warning btn-sm me-2"
                       onClick={() => onEdit(course)}
+                      title="Edit"
                     >
-                      <i className="bi bi-pencil me-1"></i>Edit
+                      <i className="bi bi-pencil"></i>
                     </button>
                     <button 
                       className="btn btn-danger btn-sm"
                       onClick={() => onDelete(course.id)}
+                      title="Delete"
                     >
-                      <i className="bi bi-trash me-1"></i>Delete
+                      <i className="bi bi-trash"></i>
                     </button>
                   </td>
                 </tr>
