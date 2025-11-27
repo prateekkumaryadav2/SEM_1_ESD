@@ -27,5 +27,6 @@ com/example/academic/model/SpecialisationCourse.class
 com/example/academic/dto/GoogleLoginRequestDTO.class
 com/example/academic/dto/AuthResponseDTO.class
 com/example/academic/dto/CourseRequestDTO.class
+com/example/academic/exception/GlobalExceptionHandler.class
 com/example/academic/dto/ErrorResponseDTO.class
 com/example/academic/dto/SpecialisationResponseDTO.class

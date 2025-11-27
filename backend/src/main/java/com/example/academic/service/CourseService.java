@@ -45,8 +45,19 @@ public class CourseService {
      * Create a new course
      * @param courseRequestDTO Course data
      * @return Created CourseResponseDTO
+     * @throws IllegalArgumentException if course code or title already exists
      */
     public CourseResponseDTO createCourse(CourseRequestDTO courseRequestDTO) {
+        // Check if course code already exists
+        if (courseRepository.existsByCourseCode(courseRequestDTO.getCode())) {
+            throw new IllegalArgumentException("Course code already exists: " + courseRequestDTO.getCode());
+        }
+        
+        // Check if course title already exists
+        if (courseRepository.existsByName(courseRequestDTO.getTitle())) {
+            throw new IllegalArgumentException("Course title already exists: " + courseRequestDTO.getTitle());
+        }
+        
         Course course = CourseMapper.toEntity(courseRequestDTO);
         Course savedCourse = courseRepository.save(course);
         return CourseMapper.toDTO(savedCourse);
@@ -57,10 +68,31 @@ public class CourseService {
      * @param id Course ID
      * @param courseRequestDTO Updated course data
      * @return Updated CourseResponseDTO or empty if not found
+     * @throws IllegalArgumentException if course code or title already exists for another course
      */
     public Optional<CourseResponseDTO> updateCourse(Long id, CourseRequestDTO courseRequestDTO) {
         return courseRepository.findById(id)
                 .map(course -> {
+                    // Check if new code conflicts with another course
+                    if (!course.getCourseCode().equals(courseRequestDTO.getCode())) {
+                        courseRepository.findByCourseCode(courseRequestDTO.getCode())
+                            .ifPresent(existingCourse -> {
+                                if (!existingCourse.getCourseId().equals(id.intValue())) {
+                                    throw new IllegalArgumentException("Course code already exists: " + courseRequestDTO.getCode());
+                                }
+                            });
+                    }
+                    
+                    // Check if new title conflicts with another course
+                    if (!course.getName().equals(courseRequestDTO.getTitle())) {
+                        courseRepository.findByName(courseRequestDTO.getTitle())
+                            .ifPresent(existingCourse -> {
+                                if (!existingCourse.getCourseId().equals(id.intValue())) {
+                                    throw new IllegalArgumentException("Course title already exists: " + courseRequestDTO.getTitle());
+                                }
+                            });
+                    }
+                    
                     CourseMapper.updateEntity(course, courseRequestDTO);
                     Course updatedCourse = courseRepository.save(course);
                     return CourseMapper.toDTO(updatedCourse);

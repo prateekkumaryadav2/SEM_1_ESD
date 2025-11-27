@@ -32,6 +32,7 @@ const CoursesContainer: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const loadCourses = async (): Promise<void> => {
@@ -63,31 +64,51 @@ const CoursesContainer: React.FC = () => {
     e.preventDefault();
     if (!token) return;
     setLoading(true);
+    setError(null);
     
-    // Map form data to CourseRequest
-    const courseRequest: CourseRequest = {
-      code: form.code,
-      title: form.title,
-      description: form.description,
-      credits: form.credits
-    };
-    
-    if (editingId) {
-      // Update existing course
-      await API.updateCourse(token, editingId, courseRequest);
-      setSuccess('Course updated successfully!');
-      setEditingId(null);
-    } else {
-      // Create new course
-      await API.createCourse(token, courseRequest);
-      setSuccess('Course created successfully!');
+    try {
+      // Map form data to CourseRequest
+      const courseRequest: CourseRequest = {
+        code: form.code,
+        title: form.title,
+        description: form.description,
+        credits: form.credits
+      };
+      
+      let response;
+      if (editingId) {
+        // Update existing course
+        response = await API.updateCourse(token, editingId, courseRequest);
+        console.log('Update response:', response);
+        if ('error' in response) {
+          setError(response.error);
+          setLoading(false);
+          return;
+        }
+        setSuccess('Course updated successfully!');
+        setEditingId(null);
+      } else {
+        // Create new course
+        response = await API.createCourse(token, courseRequest);
+        console.log('Create response:', response);
+        if ('error' in response) {
+          setError(response.error);
+          setLoading(false);
+          return;
+        }
+        setSuccess('Course created successfully!');
+      }
+      
+      setForm({code: '', title: '', credits: 3, description: ''});
+      setShowForm(false);
+      setTimeout(() => setSuccess(null), 3000);
+      loadCourses();
+    } catch (err) {
+      console.error('Error in handleCreateCourse:', err);
+      setError('An unexpected error occurred: ' + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setLoading(false);
     }
-    
-    setForm({code: '', title: '', credits: 3, description: ''});
-    setLoading(false);
-    setShowForm(false);
-    setTimeout(() => setSuccess(null), 3000);
-    loadCourses();
   };
 
   const handleEditCourse = (course: CourseDisplay): void => {
@@ -142,6 +163,12 @@ const CoursesContainer: React.FC = () => {
           message={success} 
           type="success" 
           onClose={() => setSuccess(null)} 
+        />
+        
+        <Alert 
+          message={error} 
+          type="danger" 
+          onClose={() => setError(null)} 
         />
 
         <div className="d-flex justify-content-between align-items-center mb-4">

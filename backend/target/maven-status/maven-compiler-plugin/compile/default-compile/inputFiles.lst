@@ -11,6 +11,7 @@
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/config/DataInitializer.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/service/CourseService.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/service/SpecialisationService.java
+/Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/exception/GlobalExceptionHandler.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/dto/LoginRequestDTO.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/model/SpecialisationCourse.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/dto/SpecialisationRequestDTO.java

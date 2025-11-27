@@ -70,7 +70,22 @@ const API = {
         'X-Auth-Token': token
       },
       body: JSON.stringify(course)
-    }).then(r => r.json()),
+    }).then(async r => {
+      try {
+        const data = await r.json();
+        if (!r.ok) {
+          console.error('API error response:', data);
+          return { error: data.error || 'Failed to create course' };
+        }
+        return data;
+      } catch (err) {
+        console.error('JSON parse error:', err);
+        return { error: 'Failed to parse server response' };
+      }
+    }).catch(err => {
+      console.error('Network error:', err);
+      return { error: 'Network error occurred' };
+    }),
 
   deleteCourse: (token: string, id: number): Promise<MessageResponse | ErrorResponse> =>
     fetch(`/api/courses/${id}`, {
@@ -86,7 +101,22 @@ const API = {
         'X-Auth-Token': token
       },
       body: JSON.stringify(course)
-    }).then(r => r.json())
+    }).then(async r => {
+      try {
+        const data = await r.json();
+        if (!r.ok) {
+          console.error('API error response:', data);
+          return { error: data.error || 'Failed to update course' };
+        }
+        return data;
+      } catch (err) {
+        console.error('JSON parse error:', err);
+        return { error: 'Failed to parse server response' };
+      }
+    }).catch(err => {
+      console.error('Network error:', err);
+      return { error: 'Network error occurred' };
+    })
 };
 
 export default API;
