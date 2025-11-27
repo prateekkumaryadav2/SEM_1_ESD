@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface CourseFormData {
   code: string;
@@ -16,9 +17,11 @@ interface CourseFormProps {
 }
 
 const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loading, onCancel }) => {
+  const { darkMode } = useTheme();
+  
   return (
-    <div className="card shadow-sm mb-4" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(10px)' }}>
-      <div className="card-header bg-primary text-white">
+    <div className={`card shadow-sm mb-4 ${darkMode ? 'bg-secondary text-light' : 'bg-white'}`}>
+      <div className={`card-header ${darkMode ? 'bg-dark text-light' : 'bg-primary text-white'}`}>
         <h5 className="mb-0">
           <i className="bi bi-plus-square me-2"></i>Create New Course
         </h5>
@@ -32,7 +35,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
               </label>
               <input 
                 type="text"
-                className="form-control" 
+                className={`form-control ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
                 placeholder="e.g., CS101" 
                 value={form.code} 
                 onChange={e => setForm({...form, code: e.target.value})} 
@@ -45,7 +48,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
               </label>
               <input 
                 type="text"
-                className="form-control" 
+                className={`form-control ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
                 placeholder="e.g., Introduction to Computer Science" 
                 value={form.title} 
                 onChange={e => setForm({...form, title: e.target.value})} 
@@ -58,7 +61,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
               </label>
               <input 
                 type="number" 
-                className="form-control" 
+                className={`form-control ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
                 placeholder="3" 
                 value={form.credits} 
                 onChange={e => setForm({...form, credits: parseInt(e.target.value || '0')})}
@@ -71,7 +74,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
                 <i className="bi bi-file-text me-1"></i>Description
               </label>
               <textarea 
-                className="form-control" 
+                className={`form-control ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
                 rows={3}
                 placeholder="Enter course description" 
                 value={form.description} 

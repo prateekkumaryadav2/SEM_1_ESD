@@ -5,6 +5,7 @@ public class AuthResponseDTO {
     private String token;
     private String username;
     private String name;
+    private String role;
 
     // Constructors
     public AuthResponseDTO() {}
@@ -18,6 +19,13 @@ public class AuthResponseDTO {
         this.token = token;
         this.username = username;
         this.name = name;
+    }
+
+    public AuthResponseDTO(String token, String username, String name, String role) {
+        this.token = token;
+        this.username = username;
+        this.name = name;
+        this.role = role;
     }
 
     // Getters and Setters
@@ -43,5 +51,13 @@ public class AuthResponseDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

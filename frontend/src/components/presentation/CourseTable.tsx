@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface Course {
   id: number;
@@ -14,13 +15,15 @@ interface CourseTableProps {
 }
 
 const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete }) => {
+  const { darkMode } = useTheme();
+  
   if (courses.length === 0) {
     return (
-      <div className="card shadow-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(10px)' }}>
+      <div className={`card shadow-sm ${darkMode ? 'bg-secondary text-light' : 'bg-white'}`}>
         <div className="card-body p-0">
           <div className="text-center py-5">
-            <i className="bi bi-inbox display-1 text-muted"></i>
-            <p className="text-muted mt-3">No courses found. Add your first course to get started!</p>
+            <i className={`bi bi-inbox display-1 ${darkMode ? 'text-light' : 'text-muted'}`}></i>
+            <p className={`mt-3 ${darkMode ? 'text-light' : 'text-muted'}`}>No courses found. Add your first course to get started!</p>
           </div>
         </div>
       </div>
@@ -28,8 +31,8 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete }) => {
   }
 
   return (
-    <div className="card shadow-sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.7)', backdropFilter: 'blur(10px)' }}>
-      <div className="card-header" style={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}>
+    <div className={`card shadow-sm ${darkMode ? 'bg-secondary' : 'bg-white'}`}>
+      <div className={`card-header ${darkMode ? 'bg-dark text-light' : 'bg-light'}`}>
         <h5 className="mb-0">
           <i className="bi bi-list-ul me-2"></i>
           All Courses 
@@ -38,7 +41,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete }) => {
       </div>
       <div className="card-body p-0">
         <div className="table-responsive">
-          <table className="table table-hover table-striped mb-0">
+          <table className={`table table-hover table-striped mb-0 ${darkMode ? 'table-dark' : ''}`}>
             <thead className="table-dark">
               <tr>
                 <th><i className="bi bi-hash me-1"></i>ID</th>

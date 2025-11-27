@@ -21,7 +21,8 @@ public class AuthMapper {
         return new AuthResponseDTO(
             token,
             user.getUsername(),
-            displayName
+            displayName,
+            user.getRole()
         );
     }
     
@@ -40,7 +41,8 @@ public class AuthMapper {
         return new AuthResponseDTO(
             token,
             user.getUsername(),
-            name != null ? name : user.getUsername()
+            name != null ? name : user.getUsername(),
+            user.getRole()
         );
     }
     

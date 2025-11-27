@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface LoginFormProps {
   username: string;
@@ -25,6 +26,8 @@ const LoginForm: React.FC<LoginFormProps> = ({
   error,
   onErrorClose 
 }) => {
+  const { darkMode } = useTheme();
+
   return (
     <>
       {error && (
@@ -37,12 +40,12 @@ const LoginForm: React.FC<LoginFormProps> = ({
 
       <form onSubmit={onSubmit}>
         <div className="mb-3">
-          <label htmlFor="username" className="form-label">
+          <label htmlFor="username" className={`form-label ${darkMode ? 'text-light' : ''}`}>
             <i className="bi bi-person-fill me-2"></i>Username
           </label>
           <input 
             type="text" 
-            className="form-control form-control-lg" 
+            className={`form-control form-control-lg ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
             id="username"
             placeholder="Enter your username"
             value={username} 
@@ -53,13 +56,13 @@ const LoginForm: React.FC<LoginFormProps> = ({
         </div>
 
         <div className="mb-4">
-          <label htmlFor="password" className="form-label">
+          <label htmlFor="password" className={`form-label ${darkMode ? 'text-light' : ''}`}>
             <i className="bi bi-lock-fill me-2"></i>Password
           </label>
           <div className="position-relative">
             <input 
               type={showPassword ? "text" : "password"}
-              className="form-control form-control-lg" 
+              className={`form-control form-control-lg ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
               id="password"
               placeholder="Enter your password"
               value={password} 
@@ -75,7 +78,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
                 border: 'none',
                 background: 'transparent',
                 padding: '0.5rem 1rem',
-                color: '#6c757d'
+                color: darkMode ? '#adb5bd' : '#6c757d'
               }}
               title={showPassword ? 'Hide password' : 'Show password'}
             >

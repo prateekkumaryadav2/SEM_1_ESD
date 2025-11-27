@@ -68,7 +68,7 @@ const LoginContainer: React.FC = () => {
     const res = await API.googleLogin(response.credential);
     setLoading(false);
     if ('token' in res) {
-      login(res.token);
+      login(res.token, res.role);
     } else if ('error' in res) {
       setError(res.error || 'Google login failed');
     }
@@ -81,7 +81,7 @@ const LoginContainer: React.FC = () => {
     const res = await API.login(username, password);
     setLoading(false);
     if ('token' in res) {
-      login(res.token);
+      login(res.token, res.role);
     } else if ('error' in res) {
       setError(res.error || 'Login failed. Please check your credentials.');
     }
@@ -112,8 +112,8 @@ const LoginContainer: React.FC = () => {
               <ThemeToggle darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             </div>
             
-            <div className="card shadow-lg border-0" style={{ borderRadius: '20px', overflow: 'hidden' }}>
-              <div className="card-header bg-primary text-white text-center py-4">
+            <div className={`card shadow-lg border-0 ${darkMode ? 'bg-secondary text-light' : 'bg-white'}`} style={{ borderRadius: '20px', overflow: 'hidden' }}>
+              <div className={`card-header ${darkMode ? 'bg-dark' : 'bg-primary'} text-white text-center py-4`}>
                 <h3 className="mb-0">
                   <i className="bi bi-mortarboard-fill me-2"></i>
                   Academic Portal
@@ -121,7 +121,7 @@ const LoginContainer: React.FC = () => {
               </div>
               
               <div className="card-body p-5">
-                <h5 className="card-title text-center mb-4">Sign In</h5>
+                <h5 className={`card-title text-center mb-4 ${darkMode ? 'text-light' : ''}`}>Sign In</h5>
                 
                 <LoginForm
                   username={username}
@@ -137,8 +137,8 @@ const LoginContainer: React.FC = () => {
                 />
 
                 <div className="position-relative my-4">
-                  <hr />
-                  <span className="position-absolute top-50 start-50 translate-middle bg-white px-3 text-muted">
+                  <hr className={darkMode ? 'border-secondary' : ''} />
+                  <span className={`position-absolute top-50 start-50 translate-middle px-3 ${darkMode ? 'bg-secondary text-light' : 'bg-white text-muted'}`}>
                     OR
                   </span>
                 </div>
@@ -146,8 +146,8 @@ const LoginContainer: React.FC = () => {
                 <div id="googleSignInButton" className="d-flex justify-content-center"></div>
               </div>
               
-              <div className="card-footer text-center py-3 bg-light">
-                <small className="text-muted">
+              <div className={`card-footer text-center py-3 ${darkMode ? 'bg-dark text-light' : 'bg-light text-muted'}`}>
+                <small>
                   <i className="bi bi-info-circle me-1"></i>
                   Default credentials: <strong>admin</strong> / <strong>password</strong>
                 </small>
@@ -158,22 +158,28 @@ const LoginContainer: React.FC = () => {
               <div 
                 className="d-inline-block px-4 py-2 rounded-pill shadow-lg"
                 style={{
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  backgroundColor: darkMode ? 'rgba(52, 58, 64, 0.95)' : 'rgba(255, 255, 255, 0.95)',
                   backdropFilter: 'blur(10px)'
                 }}
               >
                 <div className="d-flex justify-content-center align-items-center gap-3">
-                  <small style={{ color: '#6c757d' }}>
+                  <small className={darkMode ? 'text-light' : 'text-muted'}>
                     © 2025 Academic Management System. All rights reserved.
                   </small>
                   <a 
                     href="https://github.com/prateekkumaryadav2/SEM_1_ESD" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="text-decoration-none text-dark"
-                    title="View Source Code on GitHub"
+                    className={`text-decoration-none ${darkMode ? 'text-light' : 'text-dark'}`}
+                    style={{ 
+                      fontSize: '1.5rem',
+                      transition: 'opacity 0.3s ease'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.7'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                    title="View on GitHub"
                   >
-                    <i className="bi bi-github" style={{ fontSize: '1.5rem' }}></i>
+                    <i className="bi bi-github"></i>
                   </a>
                 </div>
               </div>
