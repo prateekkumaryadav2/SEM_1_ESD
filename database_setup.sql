@@ -2,8 +2,6 @@
 -- Academic Management System - Database Setup Script
 -- =====================================================
 -- Database: academic_db
--- Date: 25 November 2025
--- =====================================================
 
 USE academic_db;
 
