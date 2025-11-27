@@ -14,16 +14,18 @@ interface CourseFormProps {
   onSubmit: (e: React.FormEvent) => void;
   loading: boolean;
   onCancel: () => void;
+  isEditing?: boolean;
 }
 
-const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loading, onCancel }) => {
+const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loading, onCancel, isEditing = false }) => {
   const { darkMode } = useTheme();
   
   return (
     <div className={`card shadow-sm mb-4 ${darkMode ? 'bg-secondary text-light' : 'bg-white'}`}>
       <div className={`card-header ${darkMode ? 'bg-dark text-light' : 'bg-primary text-white'}`}>
         <h5 className="mb-0">
-          <i className="bi bi-plus-square me-2"></i>Create New Course
+          <i className={`bi bi-${isEditing ? 'pencil-square' : 'plus-square'} me-2`}></i>
+          {isEditing ? 'Edit Course' : 'Create New Course'}
         </h5>
       </div>
       <div className="card-body">
@@ -91,12 +93,12 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
               {loading ? (
                 <>
                   <span className="spinner-border spinner-border-sm me-2"></span>
-                  Creating...
+                  {isEditing ? 'Updating...' : 'Creating...'}
                 </>
               ) : (
                 <>
-                  <i className="bi bi-check-circle me-2"></i>
-                  Create Course
+                  <i className={`bi bi-${isEditing ? 'check-circle' : 'check-circle'} me-2`}></i>
+                  {isEditing ? 'Update Course' : 'Create Course'}
                 </>
               )}
             </button>

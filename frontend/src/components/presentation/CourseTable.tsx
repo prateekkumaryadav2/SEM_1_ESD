@@ -12,9 +12,10 @@ interface Course {
 interface CourseTableProps {
   courses: Course[];
   onDelete: (id: number) => void;
+  onEdit: (course: Course) => void;
 }
 
-const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete }) => {
+const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete, onEdit }) => {
   const { darkMode } = useTheme();
   
   if (courses.length === 0) {
@@ -74,6 +75,12 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete }) => {
                     </small>
                   </td>
                   <td className="align-middle text-center">
+                    <button 
+                      className="btn btn-warning btn-sm me-2"
+                      onClick={() => onEdit(course)}
+                    >
+                      <i className="bi bi-pencil me-1"></i>Edit
+                    </button>
                     <button 
                       className="btn btn-danger btn-sm"
                       onClick={() => onDelete(course.id)}

@@ -29,6 +29,7 @@ const CoursesContainer: React.FC = () => {
   const [courses, setCourses] = useState<CourseDisplay[]>([]);
   const [form, setForm] = useState<CourseFormData>({code: '', title: '', credits: 3, description: ''});
   const [showForm, setShowForm] = useState<boolean>(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [success, setSuccess] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -71,13 +72,39 @@ const CoursesContainer: React.FC = () => {
       credits: form.credits
     };
     
-    await API.createCourse(token, courseRequest);
+    if (editingId) {
+      // Update existing course
+      await API.updateCourse(token, editingId, courseRequest);
+      setSuccess('Course updated successfully!');
+      setEditingId(null);
+    } else {
+      // Create new course
+      await API.createCourse(token, courseRequest);
+      setSuccess('Course created successfully!');
+    }
+    
     setForm({code: '', title: '', credits: 3, description: ''});
     setLoading(false);
     setShowForm(false);
-    setSuccess('Course created successfully!');
     setTimeout(() => setSuccess(null), 3000);
     loadCourses();
+  };
+
+  const handleEditCourse = (course: CourseDisplay): void => {
+    setForm({
+      code: course.code,
+      title: course.title,
+      credits: course.credits,
+      description: course.description || ''
+    });
+    setEditingId(course.id);
+    setShowForm(true);
+  };
+
+  const handleCancelEdit = (): void => {
+    setForm({code: '', title: '', credits: 3, description: ''});
+    setEditingId(null);
+    setShowForm(false);
   };
 
   const handleDeleteCourse = async (id: number): Promise<void> => {
@@ -126,7 +153,15 @@ const CoursesContainer: React.FC = () => {
           </div>
           <button 
             className="btn btn-primary btn-lg"
-            onClick={() => setShowForm(!showForm)}
+            onClick={() => {
+              if (showForm && !editingId) {
+                setShowForm(false);
+              } else if (showForm && editingId) {
+                handleCancelEdit();
+              } else {
+                setShowForm(true);
+              }
+            }}
           >
             <i className={`bi bi-${showForm ? 'x-circle' : 'plus-circle'} me-2`}></i>
             {showForm ? 'Cancel' : 'Add New Course'}
@@ -158,13 +193,15 @@ const CoursesContainer: React.FC = () => {
             setForm={setForm}
             onSubmit={handleCreateCourse}
             loading={loading}
-            onCancel={() => setShowForm(false)}
+            onCancel={handleCancelEdit}
+            isEditing={!!editingId}
           />
         )}
 
         <CourseTable 
           courses={filteredCourses}
           onDelete={handleDeleteCourse}
+          onEdit={handleEditCourse}
         />
       </div>
 

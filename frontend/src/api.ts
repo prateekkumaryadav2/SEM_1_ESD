@@ -76,6 +76,16 @@ const API = {
     fetch(`/api/courses/${id}`, {
       method: 'DELETE',
       headers: { 'X-Auth-Token': token }
+    }).then(r => r.json()),
+
+  updateCourse: (token: string, id: number, course: CourseRequest): Promise<Course | ErrorResponse> =>
+    fetch(`/api/courses/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Token': token
+      },
+      body: JSON.stringify(course)
     }).then(r => r.json())
 };
 
