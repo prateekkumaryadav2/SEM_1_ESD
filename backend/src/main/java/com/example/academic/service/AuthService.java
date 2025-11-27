@@ -57,6 +57,7 @@ public class AuthService {
         
         String token = generateToken();
         AuthFilter.TOKENS.put(token, email);
+        AuthFilter.TOKEN_ROLES.put(token, user.getRole());
         AuthResponseDTO response = AuthMapper.toAuthResponse(user, token);
         return Optional.of(response);
     }
@@ -93,6 +94,7 @@ public class AuthService {
 
         String token = generateToken();
         AuthFilter.TOKENS.put(token, email);
+        AuthFilter.TOKEN_ROLES.put(token, user.getRole());
 
         return AuthMapper.toAuthResponse(user, token, name);
     }
@@ -105,6 +107,7 @@ public class AuthService {
     public boolean logout(String token) {
         if (token != null && AuthFilter.TOKENS.containsKey(token)) {
             AuthFilter.TOKENS.remove(token);
+            AuthFilter.TOKEN_ROLES.remove(token);
             return true;
         }
         return false;

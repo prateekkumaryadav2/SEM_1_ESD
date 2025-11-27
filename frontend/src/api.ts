@@ -7,15 +7,11 @@ export interface User {
 }
 
 export interface Course {
-  courseId: number;
-  courseCode: string;
-  name: string;
+  id: number;
+  code: string;
+  title: string;
   description: string;
-  year: number;
-  term: string;
-  faculty: string;
   credits: number;
-  capacity: number;
 }
 
 export interface AuthResponse {
@@ -34,14 +30,10 @@ export interface MessageResponse {
 }
 
 export interface CourseRequest {
-  courseCode: string;
-  name: string;
+  code: string;
+  title: string;
   description: string;
-  year: number;
-  term: string;
-  faculty: string;
   credits: number;
-  capacity: number;
 }
 
 const API = {

@@ -47,7 +47,8 @@ public class AuthController {
             AuthResponseDTO response = authService.googleLogin(googleRequest);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(401).body(new ErrorResponseDTO("Invalid Google token"));
+            e.printStackTrace(); // Log the actual exception
+            return ResponseEntity.status(401).body(new ErrorResponseDTO("Invalid Google token: " + e.getMessage()));
         }
     }
 

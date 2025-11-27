@@ -64,14 +64,10 @@ const CoursesContainer: React.FC = () => {
     
     // Map form data to CourseRequest
     const courseRequest: CourseRequest = {
-      courseCode: form.code,
-      name: form.title,
+      code: form.code,
+      title: form.title,
       description: form.description,
-      year: 2025,
-      term: 'Fall',
-      faculty: 'Faculty Name',
-      credits: form.credits,
-      capacity: 30
+      credits: form.credits
     };
     
     await API.createCourse(token, courseRequest);

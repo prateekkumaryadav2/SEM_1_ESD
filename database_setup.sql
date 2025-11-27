@@ -23,6 +23,7 @@ CREATE TABLE users (
     role VARCHAR(50),
     provider VARCHAR(50),
     provider_id VARCHAR(255),
+    password VARCHAR(255),
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -30,7 +31,7 @@ CREATE TABLE users (
 -- Table: courses
 -- =====================================================
 CREATE TABLE courses (
-    course_id INT NOT NULL,
+    course_id INT NOT NULL AUTO_INCREMENT,
     course_code VARCHAR(10) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     description TEXT,
@@ -70,13 +71,13 @@ CREATE TABLE specialisation_course (
 -- =====================================================
 -- Insert Dummy Data: users
 -- =====================================================
-INSERT INTO users (email, full_name, role, provider, provider_id) VALUES
-('admin@academic.edu', 'John Administrator', 'admin', 'local', NULL),
-('employee@academic.edu', 'Jane Employee', 'employee', 'local', NULL),
-('student1@academic.edu', 'Alice Student', 'student', 'local', NULL),
-('student2@academic.edu', 'Bob Student', 'student', 'local', NULL),
-('faculty@academic.edu', 'Dr. Michael Professor', 'faculty', 'local', NULL),
-('google.user@gmail.com', 'Sarah Google User', 'student', 'google', 'google_12345');
+INSERT INTO users (email, full_name, role, provider, provider_id, password) VALUES
+('admin@academic.edu', 'John Administrator', 'ADMIN', 'local', NULL, 'admin123'),
+('employee@academic.edu', 'Jane Employee', 'employee', 'local', NULL, 'employee123'),
+('student1@academic.edu', 'Alice Student', 'student', 'local', NULL, 'student123'),
+('student2@academic.edu', 'Bob Student', 'student', 'local', NULL, 'student123'),
+('faculty@academic.edu', 'Dr. Michael Professor', 'faculty', 'local', NULL, 'faculty123'),
+('google.user@gmail.com', 'Sarah Google User', 'STUDENT', 'google', 'google_12345', NULL);
 
 -- =====================================================
 -- Insert Dummy Data: specialisation

@@ -13,6 +13,7 @@ com/example/academic/model/Specialisation.class
 com/example/academic/controller/AuthController.class
 com/example/academic/repository/CourseRepository.class
 com/example/academic/controller/CourseController.class
+com/example/academic/config/RoleAuthorizationFilter.class
 com/example/academic/mapper/AuthMapper.class
 com/example/academic/dto/SpecialisationRequestDTO.class
 com/example/academic/mapper/CourseMapper.class

@@ -28,3 +28,4 @@
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/dto/SpecialisationResponseDTO.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/repository/CourseRepository.java
 /Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/repository/SpecialisationCourseRepository.java
+/Users/prateek/Desktop/esd/backend/src/main/java/com/example/academic/config/RoleAuthorizationFilter.java

@@ -60,6 +60,7 @@ public class AuthMapper {
         user.setEmail(email);
         user.setGoogleId(googleId);
         user.setAuthProvider("google");
+        user.setRole("STUDENT"); // Default role for Google OAuth users
         
         return user;
     }
