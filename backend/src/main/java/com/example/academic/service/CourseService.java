@@ -11,16 +11,25 @@ import com.example.academic.dto.CourseRequestDTO;
 import com.example.academic.dto.CourseResponseDTO;
 import com.example.academic.mapper.CourseMapper;
 import com.example.academic.model.Course;
+import com.example.academic.model.SpecialisationCourse;
 import com.example.academic.repository.CourseRepository;
+import com.example.academic.repository.SpecialisationCourseRepository;
+import com.example.academic.repository.SpecialisationRepository;
 
 @Service
 @Transactional
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final SpecialisationCourseRepository specialisationCourseRepository;
+    private final SpecialisationRepository specialisationRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, 
+                        SpecialisationCourseRepository specialisationCourseRepository,
+                        SpecialisationRepository specialisationRepository) {
         this.courseRepository = courseRepository;
+        this.specialisationCourseRepository = specialisationCourseRepository;
+        this.specialisationRepository = specialisationRepository;
     }
 
     /**
@@ -76,7 +85,13 @@ public class CourseService {
         
         Course course = CourseMapper.toEntity(courseRequestDTO);
         Course savedCourse = courseRepository.save(course);
-        return CourseMapper.toDTO(savedCourse);
+        
+        // Handle specialization assignments
+        if (courseRequestDTO.getSpecialisationIds() != null && !courseRequestDTO.getSpecialisationIds().isEmpty()) {
+            assignSpecialisationsToCourse(savedCourse.getCourseId(), courseRequestDTO.getSpecialisationIds());
+        }
+        
+        return enrichCourseWithSpecialisations(savedCourse);
     }
 
     /**
@@ -111,7 +126,13 @@ public class CourseService {
                     
                     CourseMapper.updateEntity(course, courseRequestDTO);
                     Course updatedCourse = courseRepository.save(course);
-                    return CourseMapper.toDTO(updatedCourse);
+                    
+                    // Update specialization assignments
+                    if (courseRequestDTO.getSpecialisationIds() != null) {
+                        updateCourseSpecialisations(updatedCourse.getCourseId(), courseRequestDTO.getSpecialisationIds());
+                    }
+                    
+                    return enrichCourseWithSpecialisations(updatedCourse);
                 });
     }
 
@@ -143,5 +164,48 @@ public class CourseService {
      */
     public long countCourses() {
         return courseRepository.count();
+    }
+    
+    /**
+     * Assign specialisations to a course
+     * @param courseId Course ID
+     * @param specialisationIds List of specialisation IDs
+     */
+    private void assignSpecialisationsToCourse(Integer courseId, List<Integer> specialisationIds) {
+        for (Integer specId : specialisationIds) {
+            if (specialisationRepository.existsById(specId)) {
+                SpecialisationCourse sc = new SpecialisationCourse();
+                // Generate a unique ID (you might want to use auto-increment)
+                sc.setId(generateSpecialisationCourseId());
+                sc.setCourseId(courseId);
+                sc.setSpecialisationId(specId);
+                specialisationCourseRepository.save(sc);
+            }
+        }
+    }
+    
+    /**
+     * Update course specialisations
+     * @param courseId Course ID
+     * @param specialisationIds New list of specialisation IDs
+     */
+    private void updateCourseSpecialisations(Integer courseId, List<Integer> specialisationIds) {
+        // Remove existing assignments
+        List<SpecialisationCourse> existing = specialisationCourseRepository.findByCourseId(courseId);
+        specialisationCourseRepository.deleteAll(existing);
+        
+        // Add new assignments
+        if (specialisationIds != null && !specialisationIds.isEmpty()) {
+            assignSpecialisationsToCourse(courseId, specialisationIds);
+        }
+    }
+    
+    /**
+     * Generate a unique ID for SpecialisationCourse
+     * @return Unique ID
+     */
+    private Integer generateSpecialisationCourseId() {
+        List<SpecialisationCourse> all = specialisationCourseRepository.findAll();
+        return all.isEmpty() ? 1 : all.stream().mapToInt(SpecialisationCourse::getId).max().orElse(0) + 1;
     }
 }

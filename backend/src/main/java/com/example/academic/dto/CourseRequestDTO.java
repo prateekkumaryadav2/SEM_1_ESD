@@ -1,5 +1,7 @@
 package com.example.academic.dto;
 
+import java.util.List;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +19,8 @@ public class CourseRequestDTO {
     private Integer credits;
     
     private String description;
+    
+    private List<Integer> specialisationIds;
 
     // Constructors
     public CourseRequestDTO() {}
@@ -59,5 +63,13 @@ public class CourseRequestDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Integer> getSpecialisationIds() {
+        return specialisationIds;
+    }
+
+    public void setSpecialisationIds(List<Integer> specialisationIds) {
+        this.specialisationIds = specialisationIds;
     }
 }

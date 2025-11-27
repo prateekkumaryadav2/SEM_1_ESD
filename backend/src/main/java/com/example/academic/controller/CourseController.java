@@ -1,6 +1,7 @@
 package com.example.academic.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.academic.dto.CourseRequestDTO;
 import com.example.academic.dto.CourseResponseDTO;
 import com.example.academic.dto.MessageResponseDTO;
+import com.example.academic.model.Specialisation;
+import com.example.academic.repository.SpecialisationRepository;
 import com.example.academic.service.CourseService;
 
 import jakarta.validation.Valid;
@@ -24,9 +27,11 @@ import jakarta.validation.Valid;
 public class CourseController {
 
     private final CourseService courseService;
+    private final SpecialisationRepository specialisationRepository;
 
-    public CourseController(CourseService courseService) {
+    public CourseController(CourseService courseService, SpecialisationRepository specialisationRepository) {
         this.courseService = courseService;
+        this.specialisationRepository = specialisationRepository;
     }
 
     @GetMapping
@@ -55,5 +60,34 @@ public class CourseController {
         return courseService.updateCourse(id, courseDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/specialisations")
+    public ResponseEntity<List<SpecialisationDTO>> getAllSpecialisations() {
+        List<Specialisation> specialisations = specialisationRepository.findAll();
+        List<SpecialisationDTO> dtos = specialisations.stream()
+                .map(s -> new SpecialisationDTO(s.getSpecialisationId(), s.getName(), s.getCode()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
+    }
+    
+    // Inner DTO class for specialisation response
+    public static class SpecialisationDTO {
+        private Integer id;
+        private String name;
+        private String code;
+        
+        public SpecialisationDTO(Integer id, String name, String code) {
+            this.id = id;
+            this.name = name;
+            this.code = code;
+        }
+        
+        public Integer getId() { return id; }
+        public void setId(Integer id) { this.id = id; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
     }
 }

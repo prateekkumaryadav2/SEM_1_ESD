@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import API, { Course, CourseRequest } from '../../api';
+import API, { Course, CourseRequest, Specialisation } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import Navbar from '../presentation/Navbar';
@@ -12,6 +12,7 @@ interface CourseFormData {
   title: string;
   credits: number;
   description: string;
+  specialisationIds: number[];
 }
 
 interface CourseDisplay {
@@ -28,7 +29,8 @@ const CoursesContainer: React.FC = () => {
   const { darkMode, toggleDarkMode } = useTheme();
   
   const [courses, setCourses] = useState<CourseDisplay[]>([]);
-  const [form, setForm] = useState<CourseFormData>({code: '', title: '', credits: 3, description: ''});
+  const [specialisations, setSpecialisations] = useState<Specialisation[]>([]);
+  const [form, setForm] = useState<CourseFormData>({code: '', title: '', credits: 3, description: '', specialisationIds: []});
   const [showForm, setShowForm] = useState<boolean>(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -59,8 +61,19 @@ const CoursesContainer: React.FC = () => {
     setCourses(displayCourses);
   };
 
+  const loadSpecialisations = async (): Promise<void> => {
+    if (!token) return;
+    try {
+      const data = await API.getSpecialisations(token);
+      setSpecialisations(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error('Failed to load specialisations:', error);
+    }
+  };
+
   useEffect(() => {
     loadCourses();
+    loadSpecialisations();
   }, []);
 
   const handleCreateCourse = async (e: React.FormEvent): Promise<void> => {
@@ -75,7 +88,8 @@ const CoursesContainer: React.FC = () => {
         code: form.code,
         title: form.title,
         description: form.description,
-        credits: form.credits
+        credits: form.credits,
+        specialisationIds: form.specialisationIds
       };
       
       let response;
@@ -102,7 +116,7 @@ const CoursesContainer: React.FC = () => {
         setSuccess('Course created successfully!');
       }
       
-      setForm({code: '', title: '', credits: 3, description: ''});
+      setForm({code: '', title: '', credits: 3, description: '', specialisationIds: []});
       setShowForm(false);
       setTimeout(() => setSuccess(null), 3000);
       loadCourses();
@@ -115,18 +129,25 @@ const CoursesContainer: React.FC = () => {
   };
 
   const handleEditCourse = (course: CourseDisplay): void => {
+    // Get specialisation IDs from specialisation names
+    const specIds = course.specialisations ? 
+      specialisations
+        .filter(s => course.specialisations!.includes(s.name))
+        .map(s => s.id) : [];
+    
     setForm({
       code: course.code,
       title: course.title,
       credits: course.credits,
-      description: course.description || ''
+      description: course.description || '',
+      specialisationIds: specIds
     });
     setEditingId(course.id);
     setShowForm(true);
   };
 
   const handleCancelEdit = (): void => {
-    setForm({code: '', title: '', credits: 3, description: ''});
+    setForm({code: '', title: '', credits: 3, description: '', specialisationIds: []});
     setEditingId(null);
     setShowForm(false);
   };
@@ -255,6 +276,7 @@ const CoursesContainer: React.FC = () => {
             loading={loading}
             onCancel={handleCancelEdit}
             isEditing={!!editingId}
+            specialisations={specialisations}
           />
         )}
 

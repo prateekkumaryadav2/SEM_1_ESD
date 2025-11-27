@@ -1,11 +1,13 @@
 import React from 'react';
 import { useTheme } from '../../context/ThemeContext';
+import { Specialisation } from '../../api';
 
 interface CourseFormData {
   code: string;
   title: string;
   credits: number;
   description: string;
+  specialisationIds: number[];
 }
 
 interface CourseFormProps {
@@ -15,10 +17,22 @@ interface CourseFormProps {
   loading: boolean;
   onCancel: () => void;
   isEditing?: boolean;
+  specialisations: Specialisation[];
 }
 
-const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loading, onCancel, isEditing = false }) => {
+const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loading, onCancel, isEditing = false, specialisations }) => {
   const { darkMode } = useTheme();
+  
+  const handleSpecialisationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const options = e.target.options;
+    const selected: number[] = [];
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selected.push(parseInt(options[i].value));
+      }
+    }
+    setForm({...form, specialisationIds: selected});
+  };
   
   return (
     <div className={`card shadow-sm mb-4 ${darkMode ? 'bg-secondary text-light' : 'bg-white'}`}>
@@ -82,6 +96,27 @@ const CourseForm: React.FC<CourseFormProps> = ({ form, setForm, onSubmit, loadin
                 value={form.description} 
                 onChange={e => setForm({...form, description: e.target.value})}
               />
+            </div>
+            <div className="col-md-12">
+              <label className="form-label">
+                <i className="bi bi-mortarboard me-1"></i>Specialisations
+              </label>
+              <select 
+                multiple
+                className={`form-control ${darkMode ? 'bg-dark text-light border-secondary' : ''}`}
+                value={form.specialisationIds.map(String)}
+                onChange={handleSpecialisationChange}
+                style={{ minHeight: '120px' }}
+              >
+                {specialisations.map(spec => (
+                  <option key={spec.id} value={spec.id}>
+                    {spec.name} ({spec.code})
+                  </option>
+                ))}
+              </select>
+              <small className={`form-text ${darkMode ? 'text-light' : 'text-muted'}`}>
+                Hold Ctrl (Cmd on Mac) to select multiple specialisations
+              </small>
             </div>
           </div>
           <div className="mt-3">

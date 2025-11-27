@@ -15,6 +15,12 @@ export interface Course {
   specialisations?: string[];
 }
 
+export interface Specialisation {
+  id: number;
+  name: string;
+  code: string;
+}
+
 export interface AuthResponse {
   token: string;
   email: string;
@@ -35,6 +41,7 @@ export interface CourseRequest {
   title: string;
   description: string;
   credits: number;
+  specialisationIds?: number[];
 }
 
 const API = {
@@ -60,6 +67,11 @@ const API = {
 
   listCourses: (token: string): Promise<Course[]> =>
     fetch('/api/courses', {
+      headers: { 'X-Auth-Token': token }
+    }).then(r => r.json()),
+
+  getSpecialisations: (token: string): Promise<Specialisation[]> =>
+    fetch('/api/courses/specialisations', {
       headers: { 'X-Auth-Token': token }
     }).then(r => r.json()),
 
