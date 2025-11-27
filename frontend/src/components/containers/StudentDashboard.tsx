@@ -183,6 +183,24 @@ const StudentDashboard: React.FC = () => {
                     <h5 className={`card-title fw-bold mb-3 ${darkMode ? 'text-light' : 'text-dark'}`}>
                       {course.title}
                     </h5>
+                    
+                    {/* Specialisations */}
+                    {course.specialisations && course.specialisations.length > 0 && (
+                      <div className="mb-3">
+                        <small className={`text-uppercase fw-bold ${darkMode ? 'text-info' : 'text-primary'}`}>
+                          <i className="bi bi-mortarboard me-1"></i>
+                          Specialisations:
+                        </small>
+                        <div className="d-flex flex-wrap gap-1 mt-2">
+                          {course.specialisations.map((spec: string, index: number) => (
+                            <span key={index} className="badge bg-success">
+                              {spec}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
                     <p className={`card-text flex-grow-1 ${darkMode ? 'text-light' : 'text-muted'}`}>
                       {course.description || 'No description available'}
                     </p>

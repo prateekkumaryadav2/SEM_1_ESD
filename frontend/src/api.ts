@@ -12,6 +12,7 @@ export interface Course {
   title: string;
   description: string;
   credits: number;
+  specialisations?: string[];
 }
 
 export interface AuthResponse {

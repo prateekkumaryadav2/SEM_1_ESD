@@ -20,6 +20,7 @@ interface CourseDisplay {
   title: string;
   credits: number;
   description?: string;
+  specialisations?: string[];
 }
 
 const CoursesContainer: React.FC = () => {
@@ -48,7 +49,8 @@ const CoursesContainer: React.FC = () => {
             code: c.code || c.courseCode,
             title: c.title || c.name,
             credits: c.credits,
-            description: c.description
+            description: c.description,
+            specialisations: c.specialisations
           };
         })
       : [];

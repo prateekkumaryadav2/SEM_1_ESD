@@ -1,5 +1,7 @@
 package com.example.academic.dto;
 
+import java.util.List;
+
 public class CourseResponseDTO {
     
     private Long id;
@@ -7,6 +9,7 @@ public class CourseResponseDTO {
     private String title;
     private Integer credits;
     private String description;
+    private List<String> specialisations;
 
     // Constructors
     public CourseResponseDTO() {}
@@ -17,6 +20,15 @@ public class CourseResponseDTO {
         this.title = title;
         this.credits = credits;
         this.description = description;
+    }
+
+    public CourseResponseDTO(Long id, String code, String title, Integer credits, String description, List<String> specialisations) {
+        this.id = id;
+        this.code = code;
+        this.title = title;
+        this.credits = credits;
+        this.description = description;
+        this.specialisations = specialisations;
     }
 
     // Getters and Setters
@@ -58,5 +70,13 @@ public class CourseResponseDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<String> getSpecialisations() {
+        return specialisations;
+    }
+
+    public void setSpecialisations(List<String> specialisations) {
+        this.specialisations = specialisations;
     }
 }

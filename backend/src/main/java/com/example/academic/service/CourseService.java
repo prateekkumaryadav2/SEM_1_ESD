@@ -2,6 +2,7 @@ package com.example.academic.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +24,27 @@ public class CourseService {
     }
 
     /**
-     * Retrieve all courses
+     * Retrieve all courses with their specialisations
      * @return List of CourseResponseDTO
      */
     public List<CourseResponseDTO> getAllCourses() {
         List<Course> courses = courseRepository.findAll();
-        return CourseMapper.toDTOList(courses);
+        return courses.stream()
+                .map(this::enrichCourseWithSpecialisations)
+                .collect(Collectors.toList());
+    }
+    
+    /**
+     * Enrich course DTO with specialisation names using JOIN query
+     */
+    private CourseResponseDTO enrichCourseWithSpecialisations(Course course) {
+        CourseResponseDTO dto = CourseMapper.toDTO(course);
+        
+        // Get specialisation names using JOIN query
+        List<String> specialisationNames = courseRepository.findSpecialisationNamesByCourseId(course.getCourseId());
+        dto.setSpecialisations(specialisationNames);
+        
+        return dto;
     }
 
     /**

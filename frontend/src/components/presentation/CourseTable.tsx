@@ -7,6 +7,7 @@ interface Course {
   title: string;
   credits: number;
   description?: string;
+  specialisations?: string[];
 }
 
 interface CourseTableProps {
@@ -48,6 +49,7 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete, onEdit }) 
                 <th><i className="bi bi-hash me-1"></i>ID</th>
                 <th><i className="bi bi-tag me-1"></i>Code</th>
                 <th><i className="bi bi-book me-1"></i>Title</th>
+                <th><i className="bi bi-mortarboard me-1"></i>Specialisations</th>
                 <th><i className="bi bi-star me-1"></i>Credits</th>
                 <th><i className="bi bi-file-text me-1"></i>Description</th>
                 <th className="text-center"><i className="bi bi-gear me-1"></i>Actions</th>
@@ -63,6 +65,19 @@ const CourseTable: React.FC<CourseTableProps> = ({ courses, onDelete, onEdit }) 
                     <strong className="text-primary">{course.code}</strong>
                   </td>
                   <td className="align-middle">{course.title}</td>
+                  <td className="align-middle">
+                    {course.specialisations && course.specialisations.length > 0 ? (
+                      <div className="d-flex flex-wrap gap-1">
+                        {course.specialisations.map((spec: string, index: number) => (
+                          <span key={index} className="badge bg-success">
+                            {spec}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-muted">-</span>
+                    )}
+                  </td>
                   <td className="align-middle">
                     <span className="badge bg-info">{course.credits}</span>
                   </td>
